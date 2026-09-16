@@ -1,0 +1,47 @@
+name: Lean verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lean-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Build the proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Build the Lean proof
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1
+        with:
+          lake-package-directory: lean
+          auto-config: "false"
+          build: "true"
+          use-mathlib-cache: "true"
+          use-github-cache: "true"
+
+      - name: Check the theorem's axioms
+        working-directory: lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee "$RUNNER_TEMP/liouville-axioms.log"
+          python3 check_axioms.py "$RUNNER_TEMP/liouville-axioms.log"
+
+      - name: Check the proof route
+        working-directory: lean
+        run: lake env lean RouteAudit.lean
