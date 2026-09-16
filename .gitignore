@@ -1,0 +1,22 @@
+# Downloaded Lean dependencies and build products
+.lake/
+*.olean
+*.olean.private
+*.olean.server
+*.ilean
+*.ir
+
+# LaTeX build products; retain the paper PDF and Lean verification logs
+/paper/*.aux
+/paper/*.log
+/paper/*.out
+/paper/*.toc
+/paper/*.synctex.gz
+/paper/*.fls
+/paper/*.fdb_latexmk
+
+# Local operating-system and Python files
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
