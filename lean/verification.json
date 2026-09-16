@@ -1,0 +1,32 @@
+{
+  "verified_at_utc": "2026-09-16T04:43:41.258405+00:00",
+  "lean_version": "Lean (version 4.34.0-rc2, x86_64-w64-windows-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+  "mathlib_commit": "de2ef68216c6074f338c8e61890ee0a379ddfb9b",
+  "final_theorem": "LiouvilleGoldbach.liouville_goldbach",
+  "statement": "For every natural N, if N is even and N > 2, there exist positive naturals a,b with a+b=N and ArithmeticFunction.liouville(a)=ArithmeticFunction.liouville(b)=-1.",
+  "build": "passed",
+  "axiom_audit": "passed",
+  "proof_route_audit": "passed",
+  "proof_route": "commuting symmetries, uniform even descent, invariant-set extension, small prime square",
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "sorry_or_custom_axioms": false,
+  "native_decide_or_unsafe_source": false,
+  "source_sha256": {
+    "Audit.lean": "0fcb800825933549a8f2309d685c3aa2acb94c956c7b573ec48b9e68bc4f2781",
+    "LiouvilleGoldbach.lean": "6006c50fa9ccd3dd57dbe2aac94e1aa751aa07aa6cb27fd2aa5dae99f4685c6a",
+    "RouteAudit.lean": "a7dc188b1efe20a684d73a882e8a5b023486c8f355a1a36e99f70ba55458c1b4",
+    "LiouvilleGoldbach/Character.lean": "c697ba2ba3aa66c2bb695d1c630930763c35d47feaf4290aaad83c45a055eb55",
+    "LiouvilleGoldbach/Commuting.lean": "3aef8d1b4bfc9659991a10a76bc34e3e00c605cf881b10ff49b6398f27c11bb1",
+    "LiouvilleGoldbach/Completion.lean": "b2ff402aa249b38f59d4f41f3203a1987b28db444309542d60af68917461387d",
+    "LiouvilleGoldbach/Coset.lean": "33aa43751b85c52aeacec9202823b01ff1e83ee94505cbce6655f4f25db80e51",
+    "LiouvilleGoldbach/Descent.lean": "735dad437f0d8974e27c33b2ba2fb4bfcf59d9d982c55c11239a7ac9fa4125b7",
+    "LiouvilleGoldbach/Extension.lean": "194efbab3a2529795bd832c161a0b58106bb74f62325274aeb6b3267d128b2f8",
+    "LiouvilleGoldbach/Main.lean": "8d92eedc688ad35dc0a30d94c7c72c693d7c806f955dfd9d5d92a3391777b716",
+    "LiouvilleGoldbach/Reduction.lean": "d2c569172747a13349e240e0d73ffac8812a1f46441ae5b8ac26b2c9b107f366",
+    "LiouvilleGoldbach/Residue.lean": "74dc651cd64b9fde0a40ec385d78e5b6874939811c924a11d7d99b24ccc127d2"
+  }
+}

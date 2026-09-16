@@ -1,0 +1,14 @@
+LiouvilleGoldbach.liouville_goldbach (N : ℕ) (hEven : Even N) (hN : 2 < N) :
+  ∃ a b, 0 < a ∧ 0 < b ∧ a + b = N ∧ ArithmeticFunction.liouville a = -1 ∧ ArithmeticFunction.liouville b = -1
+'LiouvilleGoldbach.defect_commuting_square' depends on axioms: [propext, Quot.sound]
+'LiouvilleGoldbach.IntervalSigns.commuting_completion_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.IntervalSigns.commuting_completion_three' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.uniform_even_descent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.extension_descent_certificate_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.short_representative_of_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.half_interval_extension_via_invariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.Final.exists_prime_square_below_half' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.Final.no_multiplicative_agreement_of_odd' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.Final.all_even_of_positivePrimePairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.positive_prime_pairs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LiouvilleGoldbach.liouville_goldbach' depends on axioms: [propext, Classical.choice, Quot.sound]

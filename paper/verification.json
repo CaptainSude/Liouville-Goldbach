@@ -1,0 +1,94 @@
+{
+  "checked_at_utc": "2026-09-16T16:12:38.734759+00:00",
+  "title": "A Goldbach theorem for the Liouville function",
+  "pages": 8,
+  "author_name": null,
+  "references": 11,
+  "citation_and_cross_reference_checks": "passed",
+  "latex_layout_warnings": 0,
+  "text_within_page_margins": "passed",
+  "visual_review": "all 8 pages inspected after restoring the title, omitting the abstract, and crediting Pablo and Mangerel's attribution to Shusterman",
+  "opening_and_attribution_checks": "passed",
+  "formal_source_hashes": "all twelve unchanged and matched to the verified manifest",
+  "formal_build": "passed",
+  "formal_axiom_audit": "passed",
+  "formal_proof_route_audit": "passed",
+  "sha256": {
+    "liouville-goldbach.tex": "35b90c38f26024bffce088012a1adde91f8c6af1e0d8a5fa491635482287c32b",
+    "liouville-goldbach.pdf": "68945701cfa8dade2a9cd7e9a47c305f91a7a2c1e9ff4da5c971c6bbfd9b5102"
+  },
+  "page_checks": [
+    {
+      "page": 1,
+      "text_box_pt": [
+        81.81,
+        76.68,
+        514.98,
+        793.74
+      ]
+    },
+    {
+      "page": 2,
+      "text_box_pt": [
+        81.6,
+        42.12,
+        514.98,
+        764.06
+      ]
+    },
+    {
+      "page": 3,
+      "text_box_pt": [
+        81.54,
+        42.12,
+        514.98,
+        705.2
+      ]
+    },
+    {
+      "page": 4,
+      "text_box_pt": [
+        81.6,
+        42.12,
+        514.43,
+        764.06
+      ]
+    },
+    {
+      "page": 5,
+      "text_box_pt": [
+        81.57,
+        42.12,
+        514.98,
+        759.28
+      ]
+    },
+    {
+      "page": 6,
+      "text_box_pt": [
+        81.59,
+        42.12,
+        514.98,
+        764.06
+      ]
+    },
+    {
+      "page": 7,
+      "text_box_pt": [
+        81.6,
+        42.12,
+        514.98,
+        530.98
+      ]
+    },
+    {
+      "page": 8,
+      "text_box_pt": [
+        81.6,
+        42.12,
+        514.98,
+        755.65
+      ]
+    }
+  ]
+}

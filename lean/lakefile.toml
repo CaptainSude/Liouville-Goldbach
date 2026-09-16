@@ -1,0 +1,12 @@
+name = "liouvilleGoldbach"
+version = "0.1.0"
+packagesDir = ".lake/verified-packages"
+defaultTargets = ["LiouvilleGoldbach"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "de2ef68216c6074f338c8e61890ee0a379ddfb9b"
+
+[[lean_lib]]
+name = "LiouvilleGoldbach"

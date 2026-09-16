@@ -1,0 +1,15 @@
+import LiouvilleGoldbach
+
+#check LiouvilleGoldbach.liouville_goldbach
+#print axioms LiouvilleGoldbach.defect_commuting_square
+#print axioms LiouvilleGoldbach.IntervalSigns.commuting_completion_two
+#print axioms LiouvilleGoldbach.IntervalSigns.commuting_completion_three
+#print axioms LiouvilleGoldbach.uniform_even_descent
+#print axioms LiouvilleGoldbach.extension_descent_certificate_symmetric
+#print axioms LiouvilleGoldbach.short_representative_of_invariance
+#print axioms LiouvilleGoldbach.half_interval_extension_via_invariance
+#print axioms LiouvilleGoldbach.Final.exists_prime_square_below_half
+#print axioms LiouvilleGoldbach.Final.no_multiplicative_agreement_of_odd
+#print axioms LiouvilleGoldbach.Final.all_even_of_positivePrimePairs
+#print axioms LiouvilleGoldbach.positive_prime_pairs
+#print axioms LiouvilleGoldbach.liouville_goldbach

@@ -1,0 +1,660 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm}
+\usepackage{newtxtext,newtxmath}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{microtype}
+\usepackage[a4paper,left=29mm,right=29mm,top=27mm,bottom=29mm]{geometry}
+\usepackage{booktabs,array}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{needspace}
+\usepackage{hyperref}
+\definecolor{inkblue}{RGB}{35,65,86}
+\hypersetup{colorlinks=true,linkcolor=inkblue,citecolor=inkblue,urlcolor=inkblue,
+  pdftitle={A Goldbach theorem for the Liouville function},pdfauthor={},
+  pdfsubject={An elementary proof with a complete Lean formalization},
+  pdfkeywords={Liouville function, Goldbach problem, multiplicative functions, Lean}}
+\urlstyle{same}
+\linespread{1.055}
+\setlength{\parindent}{1.15em}
+\setlength{\parskip}{2pt}
+\setlength{\emergencystretch}{1.5em}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape A Goldbach theorem for the Liouville function}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{firstpage}{\fancyhf{}\fancyfoot[C]{\small\thepage}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\numberwithin{equation}{section}
+\newcommand{\Fp}{\mathbb F_p}
+\newcommand{\Fpx}{\mathbb F_p^{\times}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\leg}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\lam}{\lambda}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\mainresult}{\ref{thm:main}}
+
+\begin{document}
+\thispagestyle{firstpage}
+\begin{center}
+  {\LARGE\bfseries A Goldbach theorem\par
+   \vspace{3pt}for the Liouville function\par}
+  \vspace{9pt}
+  {\large Two commuting symmetries and a descent}
+\end{center}
+\vspace{8pt}
+
+\section{The problem and its background}
+
+The Goldbach conjecture asks whether every even integer greater than
+two is a sum of two primes. One can weaken the requirement on the summands
+while retaining a basic feature of primality: a prime has an odd number of
+prime factors.
+
+For a positive integer \(n\), let \(\Omega(n)\) be the number of its prime
+factors, counted with multiplicity, and put
+\[
+  \lam(n)=(-1)^{\Omega(n)}.
+\]
+This is the \emph{Liouville function}. Thus \(\lam(1)=1\), every prime has
+value \(-1\), and
+\begin{equation}\label{eq:liouville}
+  \lam(ab)=\lam(a)\lam(b),\qquad
+  \lam(2n)=\lam(3n)=-\lam(n).
+\end{equation}
+The condition \(\lam(n)=-1\) also admits many composite integers: for
+example, \(\lam(8)=\lam(12)=-1\), so \(20=8+12\) is an admissible sum.
+
+In August 2018, the MathOverflow user Pablo~\cite{MathOverflow} asked
+whether every even \(N>2\) has a representation
+\begin{equation}\label{eq:question}
+  N=a+b,\qquad a,b\ge1,\qquad \lam(a)=\lam(b)=-1.
+\end{equation}
+Mangerel attributes the question to Shusterman~\cite[Problem~1.1]{MangerelSigns}.
+Goldbach's conjecture implies this assertion. The Liouville condition
+retains the parity of prime factorization while allowing composite summands.
+
+A closely related question concerns the reflected correlation
+\[
+  C(N)=\sum_{1\le n<N}\lam(n)\lam(N-n).
+\]
+The older convolution problem of Corr\'adi and K\'atai asks for the
+stronger cancellation statement \(C(N)=o(N)\) as \(N\to\infty\)
+\cite{CorradiKatai}; see also the formulation in
+\cite[Conjecture~1]{Krishnamoorthy}. Here the issue is whether a specified
+sign pair occurs at every prescribed even total.
+
+Mangerel proved, by an elementary argument, that
+\begin{equation}\label{eq:nonextreme}
+  |C(N)|<N-1\qquad\text{for every }N\ge11,
+\end{equation}
+and determined that equality in absolute value occurs, for \(N\ge2\),
+exactly at \(N\in\{2,3,5,10\}\)~\cite[Theorem~1.2]{MangerelGoldbach}.
+This ensures the occurrence of both equal and unequal signs, but does not
+specify which equal-sign pattern occurs. In particular, it does not by
+itself give the pair \((-1,-1)\) in~\eqref{eq:question}.
+
+Mangerel subsequently proved~\eqref{eq:question} for every sufficiently
+large even integer under the Generalised Riemann Hypothesis for Dirichlet
+\(L\)-functions~\cite[Theorem~1.2]{MangerelSigns}. His argument also gives,
+for sufficiently large prime totals, a quantitative lower bound for each
+of the four reflected sign patterns. A preliminary manuscript treated
+positive multiples of four unconditionally, using
+\eqref{eq:nonextreme} together with elementary sign
+propagation~\cite{MultiplesFour}.
+
+There are also results averaged over the total. For example,
+Krishnamoorthy~\cite[Theorem~2]{Krishnamoorthy} gives, for each fixed
+\(\delta>0\), a density-zero exceptional set outside which
+\(|C(N)|\le\delta N\), by classical exponential-sum and mean-square
+methods. Such averaged control allows exceptional totals; the theorem
+below concerns every even total. It does not establish the stronger
+asymptotic formula \(C(N)=o(N)\).
+
+The result proved here has no size threshold or analytic hypothesis.
+
+\begin{theorem}\label{thm:main}
+For every even integer \(N>2\), there are positive integers \(a,b\) such that
+\[
+  N=a+b\qquad\text{and}\qquad \lam(a)=\lam(b)=-1.
+\]
+\end{theorem}
+
+The main work goes into an assertion with the opposite sign.
+
+\begin{theorem}\label{thm:prime}
+For every prime \(p>3\), there are positive integers \(u,v\) such that
+\[
+  2p=u+v\qquad\text{and}\qquad \lam(u)=\lam(v)=1.
+\]
+\end{theorem}
+
+The usefulness of positive-positive pairs at twice a prime was already
+pointed out by Thomas Bloom in the original discussion~\cite{MathOverflow}.
+Multiplication by an integer of negative Liouville sign turns such a pair
+into a negative-negative pair. Section~\ref{sec:finish} gives the short
+reduction, including the small prime factors.
+
+\paragraph{The idea of the proof.}
+Suppose a positive-positive pair is missing at \(2p\). This forces
+one-sided reflection inequalities for \(\lam\). Extend its values below
+\(p/2\) oddly to \(\Fp\). The inequalities almost make multiplication by
+\(-2\) and \(-3\) preserve this extension: the failures can occur only in
+two short intervals. Since the two multiplications commute, these failures
+must satisfy a compatibility identity. The intervals leave no room for a
+nonzero failure.
+
+The completed function now has exact multiplication laws for \(-1,2,3\),
+and it is already multiplicative whenever a positive integer product is
+less than \(p/2\). A descent shows that these facts force full
+multiplicativity. Finally, a small prime which is a quadratic residue
+contradicts agreement with \(\lam\).
+
+The strategy of deriving character-like rigidity from missing sign
+patterns is already present in Mangerel's
+work~\cite{MangerelGoldbach,MangerelSigns}. Commuting dilation defects also
+appear explicitly in~\cite[Section~2.2.2 and Lemma~4.3]{MangerelSigns}.
+Here the one-sided missing-pair condition yields exact symmetries through
+their interval supports, and a half-interval descent completes the
+argument. The proof below needs neither correlation estimates nor
+classification of multiplicative characters. Its only classical
+number-theoretic input beyond elementary arithmetic is quadratic
+reciprocity and its supplementary laws.
+
+\section{Reduction to twice a prime}\label{sec:finish}
+
+We first deduce Theorem~\ref{thm:main} from Theorem~\ref{thm:prime}.
+This explains the change of sign in the auxiliary problem. Only two prime
+factors need to be extracted.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}, assuming Theorem~\ref{thm:prime}]
+Write \(N=2m>2\). If \(\lam(m)=-1\), use \(N=m+m\).
+Otherwise \(\lam(m)=1\). Since \(m>1\), it has a positive even number
+of prime factors, counted with multiplicity. Extract two of them:
+\[
+  m=rsc,\qquad r,s\text{ prime},\qquad c\ge1,\qquad\lam(c)=1.
+\]
+The primes \(r,s\) need not be distinct.
+
+If one of them, say \(r\), exceeds \(3\), Theorem~\ref{thm:prime}
+gives \(2r=u+v\) with \(\lam(u)=\lam(v)=1\). Multiply by \(sc\).
+Since \(\lam(sc)=-1\),
+\[
+  N=scu+scv,\qquad \lam(scu)=\lam(scv)=-1.
+\]
+Otherwise \(r,s\in\{2,3\}\), and \(2rs\in\{8,12,18\}\).
+Use the corresponding identity
+\[
+  8=3+5,\qquad 12=5+7,\qquad 18=7+11,
+\]
+and multiply both summands by \(c\). Its positive Liouville sign
+preserves their negative signs.
+\end{proof}
+
+\section{A missing sum and two commuting symmetries}\label{sec:symmetry}
+
+Fix a prime \(p>3\). Throughout this section, suppose that \(2p\) has no
+positive-positive Liouville representation, and abbreviate \(f(n)=\lam(n)\).
+Only the values with \(0<n<2p\) will be needed.
+
+\subsection{Reflection becomes an equality on the upper third}
+
+There can be no negative-negative pair summing to \(p\): doubling both
+summands would give a positive-positive pair summing to \(2p\). This simple
+observation gives all the inequalities needed below.
+
+\begin{lemma}\label{lem:reflection}
+For \(0<n<p\),
+\begin{equation}\label{eq:reflection}
+  f(p-n)\ge-f(n),\qquad f(p+n)\le f(n).
+\end{equation}
+For \(0<n<p/2\),
+\begin{equation}\label{eq:double-reflection}
+  f(p-2n)\ge f(n).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The first inequality in~\eqref{eq:reflection} says precisely that \(n\)
+and \(p-n\) cannot both have negative sign. For the second, the only
+nontrivial case is \(f(n)=-1\). The first inequality then gives
+\(f(p-n)=1\); since \((p-n)+(p+n)=2p\), the missing positive-positive
+pair forces \(f(p+n)=-1\).
+Finally, apply the first inequality at \(2n\) and use
+\(f(2n)=-f(n)\).
+\end{proof}
+
+The inequalities are ordered as ordinary integers, with \(-1<1\). Their
+useful feature is that a closed chain forces equality.
+
+\begin{lemma}\label{lem:upper}
+If \(p/3<n<p/2\), then
+\begin{equation}\label{eq:upper}
+  f(n)=f(p-2n)=-f(3n-p).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Put \(u=p-2n\) and \(v=3n-p\); both are positive. By
+\eqref{eq:double-reflection}, \(f(n)\le f(u)\). Since \(3n=p+v\),
+translation in~\eqref{eq:reflection} gives \(-f(n)\le f(v)\).
+Finally, \(p=3u+2v\). The two terms \(3u,2v\) cannot both have
+negative sign, so \(f(u),f(v)\) cannot both have positive sign.
+Equivalently, \(f(v)\le-f(u)\). Thus
+\[
+  -f(n)\le f(v)\le-f(u)\le-f(n),
+\]
+and every inequality is an equality.
+\end{proof}
+
+\subsection{Where can the symmetries fail?}
+
+Every nonzero residue \(x\in\Fp\) has a unique integer representative
+\(t\) with \(-p/2<t<p/2\). Define
+\begin{equation}\label{eq:completion}
+  G(0)=0,\qquad G(x)=\operatorname{sgn}(t)f(|t|)\quad(x\ne0).
+\end{equation}
+Thus \(G\) is odd, \(G(1)=1\), and \(G(n)=f(n)\) for
+\(0<n<p/2\). Integer arguments of \(G\) always mean their residues
+modulo \(p\). We call \(t\) the \emph{central representative} of \(x\).
+
+If \(0<n<p/4\), local doubling already gives
+\(G(-2n)=-f(2n)=f(n)=G(n)\). Lemma~\ref{lem:upper} gives the same
+identity for \(p/3<n<p/2\). Only the interval between \(p/4\) and
+\(p/3\) remains. To treat doubling and tripling together, define their
+\emph{defects}
+\begin{equation}\label{eq:defects}
+  A(x)=G(-2x)-G(x),\qquad B(x)=G(-3x)-G(x).
+\end{equation}
+Both functions are odd. They record exactly what still needs to be proved.
+
+\Needspace{10\baselineskip}
+\begin{lemma}\label{lem:support}
+For positive central representatives, the defects satisfy the following
+table. An interval in the table means its integer points.
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\(n\) & \((0,p/6)\) & \((p/6,p/4)\) & \((p/4,p/3)\) & \((p/3,p/2)\) \\
+\midrule
+\(A(n)\) & \(0\) & \(0\) & \(\ge0\) & \(0\) \\
+\(B(n)\) & \(0\) & \(\ge0\) & \(A(n)\) & \(0\) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{lemma}
+
+\begin{proof}
+Local doubling and Lemma~\ref{lem:upper} give the zeros in the first
+row. On the remaining interval,
+\[
+  A(n)=f(p-2n)-f(n)\ge0
+\]
+by~\eqref{eq:double-reflection}. Local tripling and
+Lemma~\ref{lem:upper} give the two outer zeros in the second row.
+For \(p/6<n<p/3\), the central representative of \(-3n\) is
+\(p-3n\), and reflection at \(3n\) gives
+\[
+  B(n)=f(p-3n)-f(n)\ge0.
+\]
+To compare the two rows when \(p/4<n<p/3\), apply
+Lemma~\ref{lem:upper} to \(u=p-2n\in(p/3,p/2)\):
+\[
+  f(p-2n)=-f\bigl(2(p-3n)\bigr)=f(p-3n).
+\]
+Subtracting \(f(n)\) gives \(A(n)=B(n)\). There are no missing
+boundary cases, since none of \(p/6,p/4,p/3,p/2\) is an integer.
+\end{proof}
+
+\subsection{The commuting square}
+
+The table leaves one extra interval on which \(B\) may be nonzero.
+Commutativity removes it.
+
+\begin{proposition}\label{prop:symmetries}
+The completion \(G\) satisfies, for every \(x\in\Fp\),
+\begin{equation}\label{eq:exact}
+  G(2x)=-G(x),\qquad G(3x)=-G(x).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Multiplication by \(-2\) commutes with multiplication by \(-3\).
+Taking the difference of \(G\) along the two routes from \(x\) to
+\(6x\) gives
+\begin{equation}\label{eq:commuting}
+  A(-3x)+B(x)=B(-2x)+A(x).
+\end{equation}
+Indeed, both sides telescope to \(G(6x)-G(x)\).
+
+Take \(p/6<n<p/4\). The right side of~\eqref{eq:commuting} is zero:
+\(A(n)=0\), while \(-2n\) has central magnitude
+\(2n\in(p/3,p/2)\), where \(B\) vanishes. On the left,
+\(-3n\) has positive central representative
+\(p-3n\in(p/4,p/2)\). Hence \(A(-3n)\ge0\) and \(B(n)\ge0\).
+Their sum is zero, so \(B(n)=0\).
+
+The two rows of the table now agree on every positive representative.
+Oddness gives \(A=B\) on all of \(\Fp\). By~\eqref{eq:defects},
+\(G(2x)=G(3x)\), or equivalently
+\begin{equation}\label{eq:ratio}
+  G\bigl((2/3)x\bigr)=G(x).
+\end{equation}
+Here \(2/3\) denotes \(2\cdot3^{-1}\) in \(\Fp\). Applying
+\eqref{eq:ratio} at \(x\) and at \(-2x\) shows that \(A\), too,
+is invariant under multiplication by \(2/3\).
+
+Suppose \(A\) is not identically zero. The table and oddness give a
+positive central representative \(n\in(p/4,p/3)\) with \(A(n)>0\).
+Let \(m\) be the central representative of \((2/3)n\). Invariance
+gives \(A(m)=A(n)>0\). It follows from oddness and the table that
+\(m\) is also positive and lies in \((p/4,p/3)\). Yet
+\[
+  3m\equiv2n\pmod p,
+\]
+whereas
+\[
+  2n\in(p/2,2p/3),\qquad 3m\in(3p/4,p).
+\]
+These are disjoint intervals inside \((0,p)\), so the congruence is
+impossible. Therefore \(A=B=0\). The desired identities follow from
+\eqref{eq:defects} and oddness of \(G\).
+\end{proof}
+
+\section{From short products to full multiplicativity}\label{sec:extension}
+
+The completed function already knows how to multiply whenever reduction
+modulo \(p\) is unnecessary. In fact,
+\begin{equation}\label{eq:short}
+  G(ab)=G(a)G(b)\qquad(a,b\ge1,\ ab<p/2),
+\end{equation}
+because \(a,b,ab\) are all in the interval where \(G=\lam\).
+We now show that exact multiplication by \(-1,2,3\) is enough to carry
+this local rule through every reduction modulo \(p\).
+
+The arithmetic step is most transparent as a statement about cosets.
+For a subgroup \(H\subseteq\Fpx\), a coset \(xH\) is the set obtained
+by multiplying \(x\) by every element of \(H\).
+Throughout this section, integers appearing as arguments of a function on
+\(\Fpx\), or in a statement of subgroup membership, are reduced modulo \(p\).
+
+\begin{lemma}[Short representatives]\label{lem:cosets}
+Let \(p>3\) be prime, and let \(H\) be a proper subgroup of
+\(\Fpx\) containing \(-1,2,3\). Let \(q\) be the least positive
+integer representing a nonzero residue outside \(H\). Every coset of \(H\)
+has a positive integer representative \(n\) with
+\[
+  n<\frac{p}{2q}.
+\]
+\end{lemma}
+
+\begin{proof}
+First, \(q\) is prime: if it factored into two smaller positive
+integers, both factors would belong to \(H\). Since \(1,2,3,4\in H\),
+we have \(q\ge5\). Since \(-1\in H\), a missing residue has, up to
+sign, a missing positive representative below \(p/2\); thus \(q<p/2\).
+
+Choose the smallest positive integer representative \(n\) of a fixed
+coset. Negation gives \(n<p/2\), and \(n\) is odd: an even \(n\)
+could be replaced by \(n/2\), because \(2\in H\). If \(n=1\), the
+claim follows from \(q<p/2\). Hence assume \(1<n<p/2\), so
+\(n\nmid p\). Suppose for a contradiction that \(2qn\ge p\).
+Equality is impossible because \(p\) is odd, so \(2qn>p\).
+
+If \(p<(2q-1)n\), choose an even integer \(a\) nearest to \(p/n\).
+Then
+\[
+  2\le a\le2q-2,\qquad 0<|p-an|<n.
+\]
+The strict inequalities follow because \(p/n\) is not an integer;
+in particular, it cannot lie halfway between two consecutive even
+integers. Write \(a=2j\), where \(1\le j<q\). Both \(2\) and
+\(j\) belong to \(H\), so \(a\in H\). Therefore \(|p-an|\) is a
+smaller positive representative of the same coset, a contradiction.
+
+The endpoint \(p=(2q-1)n\) is excluded by \(n\nmid p\). Only the narrow interval
+\begin{equation}\label{eq:strip}
+  (2q-1)n<p<2qn
+\end{equation}
+remains. Since the prime \(q\ge5\) is not divisible by \(3\), exactly
+one of \(2q-1\) and \(2q+1\) is divisible by \(3\). Choose that
+integer as \(a\). It has the form \(a=3j\) with \(1\le j<q\),
+so once again \(a\in H\). The bounds~\eqref{eq:strip} give
+\[
+  0<|p-an|<2n.
+\]
+This remainder might be larger than \(n\), but it is even: \(a,n,p\)
+are all odd. Consequently
+\begin{equation}\label{eq:halved}
+  r=\frac{|p-an|}{2}
+\end{equation}
+is a positive integer smaller than \(n\). Its residue is
+\(\pm(a/2)n\), which lies in the same coset because
+\(-1,a,2\in H\). This final contradiction proves the lemma.
+\end{proof}
+
+The last step is the reason for using both small multipliers. Multiples
+of \(2\) handle all but the interval~\eqref{eq:strip}; a nearby multiple
+of \(3\), followed by division by \(2\), handles the interval that remains.
+
+\begin{proposition}[Half-interval extension]\label{prop:extension}
+Let \(p>3\) be prime, and let \(F:\Fpx\to\{\pm1\}\) satisfy
+\(F(1)=1\). Suppose that
+\begin{align}
+  F(cx)&=F(c)F(x)&&\text{for }c\in\{-1,2,3\},\ x\in\Fpx,
+    \label{eq:small-exact}\\
+  F(ab)&=F(a)F(b)&&\text{for }a,b\in\Z_{\ge1},\ ab<p/2.
+    \label{eq:short-F}
+\end{align}
+Then \(F(xy)=F(x)F(y)\) for every \(x,y\in\Fpx\).
+\end{proposition}
+
+\begin{proof}
+Call a residue \(c\in\Fpx\) \emph{exact} if \(F(cx)=F(c)F(x)\) for every
+\(x\in\Fpx\), and let \(H\) be the set of exact residues.
+It contains \(1\) and is closed under multiplication, by composing the
+two multiplication laws. It is also closed under inverses: exactness at
+\(c\), applied first to \(c^{-1}\) and then to \(c^{-1}x\), gives
+\(F(c^{-1}x)=F(c^{-1})F(x)\). Thus \(H\) is a subgroup containing
+\(-1,2,3\).
+
+Suppose \(H\) is proper, and let \(q\) be its least missing positive
+integer. The multiplicative defect
+\[
+  D(x)=\frac{F(qx)}{F(q)F(x)}
+\]
+is constant on each coset of \(H\). Indeed, for \(c\in H\), exactness
+at \(c\) cancels the same factor \(F(c)\) from numerator and denominator,
+giving \(D(cx)=D(x)\).
+
+By Lemma~\ref{lem:cosets}, every coset contains an integer
+\(n<p/(2q)\). Then \(qn<p/2\), so~\eqref{eq:short-F} gives
+\(D(n)=1\). Hence \(D=1\) everywhere, which means that \(q\) is
+exact after all. Therefore \(H=\Fpx\).
+\end{proof}
+
+\begin{corollary}\label{cor:multiplicative}
+Under the missing-pair assumption of Section~\ref{sec:symmetry}, the
+completion \(G\) is multiplicative on \(\Fpx\).
+\end{corollary}
+
+\begin{proof}
+Oddness gives the exact multiplier \(-1\). Evaluating
+\eqref{eq:exact} at \(x=1\) gives \(G(2)=G(3)=-1\), so the same
+identities give exact multiplication by \(2\) and \(3\).
+Equation~\eqref{eq:short} supplies short multiplicativity. Apply
+Proposition~\ref{prop:extension}.
+\end{proof}
+
+\section{A small prime quadratic residue}\label{sec:residue}
+
+Every multiplicative sign function takes the value \(1\) on nonzero
+squares. A single prime which is a square modulo \(p\) will therefore
+contradict agreement with \(\lam\). The half interval is large enough
+to contain such a prime whenever the sign at \(-1\) is negative.
+
+We use the usual quadratic-residue criteria and quadratic reciprocity;
+see, for example, Ireland and Rosen~\cite[Chapter~5]{IrelandRosen}.
+The prime-divisor observation in the next lemma is standard; it also
+appears in the official HMMT 2020 solutions~\cite[Problem~9]{HMMT}.
+For the classical study of the least prime quadratic residue, see
+Chowla, Cowles and Cowles~\cite{ChowlaCowlesCowles}.
+
+\begin{lemma}\label{lem:small-prime}
+If \(p>3\) is prime and \(p\equiv3\pmod4\), then there is a prime
+\(\ell<p/2\) which is a quadratic residue modulo \(p\).
+In fact, every prime divisor of \((p+1)/4\) has this property.
+\end{lemma}
+
+\begin{proof}
+The integer \(L=(p+1)/4\) is greater than one. Choose a prime
+\(\ell\mid L\); then \(\ell\le L<p/2\). If \(\ell=2\), then
+\(L\) is even and \(p\equiv7\pmod8\), so \(2\) is a quadratic
+residue modulo \(p\).
+
+If \(\ell\) is odd, quadratic reciprocity and \(p\equiv3\pmod4\)
+give
+\[
+  \leg{\ell}{p}
+  =(-1)^{(\ell-1)/2}\leg{p}{\ell}
+  =\leg{-p}{\ell}
+  =\leg{1}{\ell}=1,
+\]
+since \(\ell\mid p+1\). Here the parentheses denote the Legendre
+symbol. Thus \(\ell\) is a nonzero square modulo \(p\) in either case.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:prime}]
+Suppose the asserted pair is missing. The preceding sections construct an
+odd multiplicative function \(G:\Fpx\to\{\pm1\}\) agreeing with
+\(\lam\) on \(0<n<p/2\).
+
+For every nonzero \(x\),
+\[
+  G(x^2)=G(x)^2=1.
+\]
+But \(G(-1)=-1\), so \(-1\) is not a square modulo \(p\).
+The standard criterion gives \(p\equiv3\pmod4\).
+Choose the prime \(\ell\) from Lemma~\ref{lem:small-prime}. Since
+\(\ell\) is a nonzero square and \(\ell<p/2\),
+\[
+  1=G(\ell)=\lam(\ell)=-1,
+\]
+a contradiction.
+\end{proof}
+
+\clearpage
+\appendix
+\section{The accompanying formal proof}\label{sec:lean}
+
+Theorem~\ref{thm:main} is formalized in Lean~4~\cite{Lean4} with
+mathlib~\cite{Mathlib}. The final declaration is
+\begin{center}
+\small\code{LiouvilleGoldbach.liouville\_goldbach}.
+\end{center}
+It has exactly the stated hypotheses and conclusion, and uses mathlib's
+Liouville function on natural numbers.
+
+The principal steps are in \code{Commuting.lean}, \code{Descent.lean},
+\code{Coset.lean}, and \code{Residue.lean}. The third module proves the
+short-representative lemma in a more general invariant-set form and
+deduces the same extension theorem. \code{Reduction.lean} and
+\code{Main.lean} complete the argument.
+
+The source archive pins Lean to \code{v4.34.0-rc2} and mathlib to commit
+\begin{center}
+\small\code{de2ef68216c6074f338c8e61890ee0a379ddfb9b}.
+\end{center}
+The complete build passes. The final axiom audit reports only
+\code{propext}, \code{Classical.choice}, and \code{Quot.sound}, the
+standard logical foundations used by Lean and mathlib. No unfinished
+proofs or additional mathematical axioms occur. A dependency audit also
+checks that the final theorem uses the new commuting and descent
+arguments. The accompanying archive provides the source, reproduction
+instructions, and all verification logs.
+
+\begin{thebibliography}{11}
+\small
+\setlength{\itemsep}{4pt}
+
+\bibitem{MathOverflow}
+Pablo (MathOverflow username),
+\emph{Goldbach's conjecture for the Liouville function},
+MathOverflow discussion, question 307479, 3 August 2018.
+\href{https://mathoverflow.net/questions/307479/goldbachs-conjecture-for-the-liouville-function}{mathoverflow.net/questions/307479}.
+
+\bibitem{CorradiKatai}
+C.~A.~Corr\'adi and I.~K\'atai,
+\emph{Some problems concerning the convolutions of number-theoretical
+functions}, Archiv der Mathematik \textbf{20} (1969), 24--29.
+\href{https://doi.org/10.1007/BF01898987}{doi:10.1007/BF01898987}.
+
+\bibitem{MangerelGoldbach}
+A.~P.~Mangerel,
+\emph{On a Goldbach-type problem for the Liouville function},
+International Mathematics Research Notices \textbf{2024} (2024), no.~16,
+11865--11877.
+\href{https://doi.org/10.1093/imrn/rnae149}{doi:10.1093/imrn/rnae149}.
+
+\bibitem{MangerelSigns}
+A.~P.~Mangerel,
+\emph{On Shusterman's Goldbach-type problem for sign patterns of the
+Liouville function}, preprint, 23 December 2024.
+\href{https://arxiv.org/abs/2412.17199v1}{arXiv:2412.17199v1}.
+
+\bibitem{Krishnamoorthy}
+K.~Krishnamoorthy,
+\emph{On a conjecture of Corr\'adi and K\'atai}, preprint, 2026.
+\href{https://arxiv.org/abs/2608.13266}{arXiv:2608.13266}.
+
+\bibitem{MultiplesFour}
+\emph{Liouville--Goldbach for multiples of four}, preliminary manuscript
+and formalization, CaptainSude GitHub repository, accessed 16 September 2026.
+\href{https://github.com/CaptainSude/Liouville-Goldbach-Multiples-of-Four}{Repository and manuscript}.
+
+\bibitem{IrelandRosen}
+K.~Ireland and M.~Rosen,
+\emph{A Classical Introduction to Modern Number Theory}, 2nd ed.,
+Graduate Texts in Mathematics, vol.~84, Springer, New York, 1990.
+\href{https://doi.org/10.1007/978-1-4757-2103-4}{doi:10.1007/978-1-4757-2103-4}.
+
+\bibitem{HMMT}
+Harvard--MIT Mathematics Tournament,
+\emph{HMMT February 2020: Team Round Solutions}, 15 February 2020,
+Problem~9, solution~1, p.~8; problem proposed by A.~Gu.
+\href{https://hmmt-archive.s3.amazonaws.com/tournaments/2020/feb/team/solutions.pdf}{Official solutions}.
+
+\bibitem{ChowlaCowlesCowles}
+S.~Chowla, J.~Cowles and M.~Cowles,
+\emph{The least prime quadratic residue and the class number},
+Journal of Number Theory \textbf{22} (1986), no.~1, 1--3.
+\href{https://doi.org/10.1016/0022-314X(86)90026-0}{doi:10.1016/0022-314X(86)90026-0}.
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich,
+\emph{The Lean 4 theorem prover and programming language},
+in Automated Deduction---CADE~28, Lecture Notes in Computer Science,
+vol.~12699, Springer, 2021, 625--635.
+\href{https://doi.org/10.1007/978-3-030-79876-5_37}{doi:10.1007/978-3-030-79876-5\_37}.
+
+\bibitem{Mathlib}
+The mathlib Community,
+\emph{The Lean mathematical library},
+Proceedings of the 9th ACM SIGPLAN International Conference on Certified
+Programs and Proofs (CPP~2020), ACM, 2020, 367--381.
+\href{https://doi.org/10.1145/3372885.3373824}{doi:10.1145/3372885.3373824}.
+
+\end{thebibliography}
+\end{document}
